@@ -1,0 +1,60 @@
+{
+  "name": "node_mobile_api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dogtownmedia/pepperjelly-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dogtownmedia/pepperjelly-api/issues"
+  },
+  "homepage": "https://github.com/dogtownmedia/pepperjelly-api#readme",
+  "dependencies": {
+    "algoliasearch": "^3.22.1",
+    "apnagent": "1.1.x",
+    "async": "^2.4.0",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.13.2",
+    "bower": "^1.4.1",
+    "bower-files": "^3.11.3",
+    "bower-requirejs": "^1.1.3",
+    "cookie-parser": "^1.3.5",
+    "ejs": "^2.3.4",
+    "es": "^0.4.8",
+    "event-stream": "^3.3.2",
+    "express": "^4.13.1",
+    "express-session": "^1.11.3",
+    "express-validator": "^2.13.0",
+    "geocoder": "0.2.x",
+    "jade": "^1.11.0",
+    "main-bower-files": "^2.9.0",
+    "mocha": "~1.14.0",
+    "mongodb": "2.0.*",
+    "morgan": "^1.5.1",
+    "node-googleplaces": "0.1.x",
+    "parse-push": "0.0.3",
+    "passport": "^0.2.2",
+    "passport-facebook-token": "^2.2.0",
+    "passport-google-oauth": "1.0.x",
+    "passport-instagram": "^1.0.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^1.0.0",
+    "passport-token-auth": "^0.1.2",
+    "path": "^0.11.14",
+    "q": "1.4.*",
+    "randomstring": "^1.0.7",
+    "request": "2.69.*",
+    "sendgrid": "^1.9.0",
+    "serve-static": "^1.10.0",
+    "socket.io": "^2.0.1",
+    "worker-farm": "^1.3.1"
+  }
+}

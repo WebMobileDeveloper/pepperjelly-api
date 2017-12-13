@@ -1,0 +1,45 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title clickable" ng-click="requestAction('list', 'issues')">Reports</h3>
+    </div>
+    <div class="panel-body">
+        <div class="alert alert-warning" ng-if="loading" role="alert">Loading, please wait...</div>
+        <div class="alert alert-danger" ng-if="loadingError" role="alert">{{loadingError}}</div>
+        <div ui-view></div>
+        <form ng-hide="loading || loadingError || !listVisibility()" ng-submit="loadList(true)">
+            <nav>
+                <div>Showing from <b>{{pagination.from}}</b> to <b>{{pagination.to}}</b> of <b>{{pagination.total}}</b>.</div>
+                <ul class="pagination">
+                    <li ng-class="{disabled : pagination.currentPage === 1}"><a ng-click="gotoPage(1)" aria-label="First"><span aria-hidden="true">|&laquo;</span></a></li>
+                    <li ng-class="{disabled : pagination.currentPage === 1}"><a ng-click="gotoPage(pagination.currentPage - 1)" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                    <li ng-repeat="page in pagination.pages" ng-class="{'active' : page === pagination.currentPage}"><a ng-click="gotoPage(page)">{{page}} <span class="sr-only" ng-if="page == pagination.currentPage">(current)</span></a></li>
+                    <li ng-class="{disabled : pagination.currentPage == pagination.totalPages}"><a ng-click="gotoPage(pagination.currentPage + 1)" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                    <li ng-class="{disabled : pagination.currentPage == pagination.totalPages}"><a ng-click="gotoPage(pagination.totalPages)" aria-label="Last"><span aria-hidden="true">&raquo;|</span></a></li>
+                </ul>
+            </nav>
+            <table class="table table-condensed table-striped table-responsive table-hover">
+                <tr>
+                    <th>Motive</th>
+                    <th>Timestamp</th>
+                    <th>Dish Id</th>
+                    <th>User Id</th>
+                </tr>
+                <tr ng-repeat="issue in issues">
+                    <td>{{checkContent(issue.motive)}}</td>
+                    <td>{{checkContent(issue.createdAt)}}</td>
+                    <td><a class="clickable" ng-click="requestAction('detail', issue.dishId, 'dish')">{{checkContent(issue.dishId)}}</a></td>
+                    <td><a class="clickable" ng-click="requestAction('detail', issue.userId, 'user')">{{checkContent(issue.userId)}}</a></td>
+                </tr>
+            </table>
+            <nav>
+                <ul class="pagination">
+                    <li ng-class="{disabled : pagination.currentPage === 1}"><a ng-click="gotoPage(1)" aria-label="First"><span aria-hidden="true">|&laquo;</span></a></li>
+                    <li ng-class="{disabled : pagination.currentPage === 1}"><a ng-click="gotoPage(pagination.currentPage - 1)" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                    <li ng-repeat="page in pagination.pages" ng-class="{'active' : page === pagination.currentPage}"><a ng-click="gotoPage(page)">{{page}} <span class="sr-only" ng-if="page == pagination.currentPage">(current)</span></a></li>
+                    <li ng-class="{disabled : pagination.currentPage == pagination.totalPages}"><a ng-click="gotoPage(pagination.currentPage + 1)" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                    <li ng-class="{disabled : pagination.currentPage == pagination.totalPages}"><a ng-click="gotoPage(pagination.totalPages)" aria-label="Last"><span aria-hidden="true">&raquo;|</span></a></li>
+                </ul>
+            </nav>
+        </form>
+    </div>
+</div>

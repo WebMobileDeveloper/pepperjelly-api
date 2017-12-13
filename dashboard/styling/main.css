@@ -1,0 +1,64 @@
+.clickable {
+    cursor:pointer;
+}
+.sortorder:after {
+    content: '\25b2';
+}
+.sortorder.reverse:after {
+    content: '\25bc';
+}
+.singleField {
+    margin-top: 20px;
+}
+.singleField label{
+    width: 100%;
+    background-color: rgba(0,0,0,.1);
+    padding: 4px;
+    border-radius: 4px;
+}
+.heightFix{
+    margin-top: -26px;
+}
+.picture{
+    max-height: 250px;
+    max-width: 250px;
+    display: inline-block;
+}
+.asBlock{
+    display: block;
+}
+.direction{
+    font-size: 30px;
+}
+.listImg{
+    max-height: 80px;
+    max-width: 80px;
+}
+.status{
+    font-size: 20px;
+}
+.pagination li>a{
+    cursor: pointer !important;
+    user-select: none;
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
+}
+nav {
+    text-align: center;
+}
+.checkbox-big{
+    width: 20px;
+    height: 20px;
+}
+.singleImage{
+    display: inline-block;
+    margin: 5px;
+}
+.forceInline{
+    display: inline-block !important;
+    max-width: 80px;
+}
+.mute{
+    opacity:.5;
+}

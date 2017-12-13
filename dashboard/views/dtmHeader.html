@@ -1,0 +1,33 @@
+<div ng-controller="dtmHeader">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#fullMenu" ng-if="loggedIn">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#/start">PepperJelly</a>
+            </div>
+            <div class="collapse navbar-collapse" id="fullMenu" ng-if="loggedIn">
+                <ul class="nav navbar-nav">
+                    <li><a class="clickable" ng-click="requestAction('list', 'user')">Users</a></li>
+                    <li><a class="clickable" ng-click="requestAction('list', 'categories')">Categories</a></li>
+                    <li><a class="clickable" ng-click="requestAction('list', 'restaurant')">Restaurants</a></li>
+                    <li><a class="clickable" ng-click="requestAction('listDirectFilter', 'dish', {status : '', restaurantId : ''})">Dishes</a></li>
+                    <li><a class="clickable bg-danger" ng-click="requestAction('listDirectFilter', 'dish', {status : 'unfiltered', restaurantId : ''})">Unfiltered dishes</a></li>
+                    <li><a class="clickable" ng-click="requestAction('list', 'issues')">Reports</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle clickable" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> {{userName}} <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a class="clickable" ng-click="requestLogOut()">Log out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>

@@ -1,0 +1,159 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{displayAction(currentAction)}}</h3>
+        <div class="btn-group pull-right heightFix" ng-show="currentAction=='detail'">
+            <div class="clickable btn btn-default" ng-click="requestAction('passwordReset', user._id)" title="Password reset"><span class="glyphicon glyphicon-lock"></span></div>
+            <div class="clickable btn btn-default" ng-click="requestAction('edit', user._id)"><span class="glyphicon glyphicon-pencil"></span></div>
+            <div class="clickable btn btn-default" ng-click="requestAction('delete', user._id)"><span class="glyphicon glyphicon-remove"></span></div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="alert alert-warning" ng-if="loading" role="alert">Loading, please wait...</div>
+        <div class="alert alert-danger" ng-if="loadingError" role="alert">{{loadingError}}</div>
+        <form class="col-sm-12" ng-hide="loading || loadingError" ng-submit="save()">
+            <div class="form-group col-sm-12">
+                <h4>Basic information</h4>
+                <hr />
+                <div class="singleField col-sm-4">
+                    <label for="userName">User name</label>
+                    <div ng-show="currentAction=='detail'">{{checkContent(user.userName)}} <small class="text-info bg-info" ng-if="user.session._id">(current authToken: {{checkContent(user.session._id)}})</small></div>
+                    <input ng-show="currentAction!='detail'" id="userName" type="text" class="form-control" ng-model="user.userName" required />
+                </div>
+                <div class="singleField col-sm-4">
+                    <label for="role">Role</label>
+                    <div ng-show="currentAction=='detail'">{{groupName(user.role)}}</div>
+                    <select ng-show="currentAction!='detail'" id="role" class="form-control" ng-model="user.role" required>
+                        <option value="">Select a value...</option>
+                        <option value="1">User</option>
+                        <option value="2">Admin</option>
+                    </select>
+                </div>
+                <div class="singleField col-sm-4" ng-show="currentAction!='create'">
+                    <label>Time created</label>
+                    <div>{{checkContent(user.createdAt)}}</div>
+                </div>
+                <div class="singleField col-sm-6" ng-show="currentAction!='detail'">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" class="form-control" ng-model="user.password" required />
+                </div>
+                <div class="singleField col-sm-6" ng-show="currentAction!='detail'">
+                    <label for="passwordCheck">Re-type password</label>
+                    <input id="passwordCheck" type="password" class="form-control" ng-model="passwordCheck" required />
+                </div>
+                <div class="singleField col-sm-4" ng-show="currentAction!='create'">
+                    <label>Facebook Id</label>
+                    <div>{{checkContent(user.facebookId)}}</div>
+                </div>
+                <div class="singleField col-sm-4" ng-show="currentAction!='create'">
+                    <label>Google Id</label>
+                    <div>{{checkContent(user.googleId)}}</div>
+                </div>
+                <div class="singleField col-sm-4" ng-show="currentAction!='create'">
+                    <label>Banned</label>
+                    <div ng-show="currentAction=='detail'">{{displayFlag(user.banned)}}</div>
+                    <input ng-show="currentAction!='detail'" id="flag" type="checkbox" ng-model="user.banned" />
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <h4>Profile</h4>
+                <hr />
+                <div class="singleField col-sm-4">
+                    <label for="profileName">Name</label>
+                    <div ng-show="currentAction=='detail'">{{checkContent(user.profile.fullName)}}</div>
+                    <input ng-show="currentAction!='detail'" id="profileName" type="text" class="form-control" ng-model="user.profile.fullName" />
+                </div>
+                <div class="singleField col-sm-4">
+                    <label for="email">Email</label>
+                    <div ng-show="currentAction=='detail'">{{checkContent(user.profile.email)}}</div>
+                    <input ng-show="currentAction!='detail'" id="email" type="text" class="form-control" ng-model="user.profile.email" />
+                </div>
+                <div class="singleField col-sm-4" ng-show="currentAction!='create'">
+                    <label>Photograph</label>
+                    <img ng-repeat="pic in user.profile.pictures" ng-src="{{pic}}"/>
+                </div>
+            </div>
+            <div class="form-group col-sm-12" ng-show="user.reports && user.reports.length > 0 && currentAction!='create'">
+                <h4>Reports</h4>
+                <hr />
+                <table class="table table-condensed table-responsive table-striped">
+                    <tr>
+                        <th>Motive</th>
+                        <th>Report timestamp</th>
+                        <th>Reporter</th>
+                        <th>Solution timestamp</th>
+                        <th>Solved by</th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="report in user.reports" ng-class="{'mute' : report.solved, 'danger' : !report.solved}">
+                        <td class="singleField col-sm-4">
+                            {{checkContent(report.motive)}}
+                        </td>
+                        <td class="singleField col-sm-2">
+                            {{checkContent(report.createdAt)}}
+                        </td>
+                        <td class="singleField col-sm-2">
+                            <a class="clickable" ng-attr-title="{{report.reportingUser}}" ng-click="requestAction('detail', report.reportingUser)">{{report.reportingUser}}</a>
+                        </td>
+                        <td class="singleField col-sm-2">
+                            {{checkContent(report.solvingDate)}}
+                        </td>
+                        <td class="singleField col-sm-2">
+                            <a class="clickable" ng-attr-title="{{report.solvingUser}}" ng-click="requestAction('detail', report.solvingUser)">{{report.solvingUser}}</a>
+                        </td>
+                        <td>
+                            <a class="glyphicon glyphicon-check clickable" ng-click="requestAction('solveIssue', report._id, 'solveUserReport')"></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!--<div class="form-group col-sm-12">
+                <h4>Followers</h4>
+                <hr />
+                <table class="table table-condensed table-responsive table-striped">
+                    <tr>
+                        <th>Followers</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="follower in user.profile.followers">
+                        <td class="singleField col-sm-8">
+                            {{checkContent(user.profile.followers)}}
+                        </td>
+                        <td class="singleField col-sm-1">
+                            <a class="clickable" ng-attr-title="{{user.profile.followers.userId}}" ng-click="requestAction('detail', user.profile.followers.userId, 'user')">Go to user...</a>
+                        </td>
+                        <td class="singleField col-sm-1">
+                            <span class="glyphicon glyphicon-remove clickable" ng-click="requestAction('delete', user.profile.followers._id, 'followers')" ></span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="form-group col-sm-12">
+                <h4>Following</h4>
+                <hr />
+                <table class="table table-condensed table-responsive table-striped">
+                    <tr>
+                        <th>Following</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="follower in user.profile.following">
+                        <td class="singleField col-sm-8">
+                            {{checkContent(user.profile.following)}}
+                        </td>
+                        <td class="singleField col-sm-1">
+                            <a class="clickable" ng-attr-title="{{user.profile.following.userId}}" ng-click="requestAction('detail', user.profile.following.userId, 'user')">Go to user...</a>
+                        </td>
+                        <td class="singleField col-sm-1">
+                            <span class="glyphicon glyphicon-remove clickable" ng-click="requestAction('delete', user.profile.following._id, 'following')" ></span>
+                        </td>
+                    </tr>
+                </table>
+            </div>-->
+            <div class="form-group col-sm-12" ng-show="currentAction!='detail'">
+                <button class="btn btn-primary pull-right" type="submit">Save</button>
+                <button class="btn btn-default pull-right" type="button" ng-click="cancelSave()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

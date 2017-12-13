@@ -1,0 +1,6 @@
+{
+	"directory": "dashboard/dependencies/",
+	"scripts": {
+	    "postinstall": "wiredep -s dashboard/index.html"
+	}
+}

@@ -1,0 +1,1092 @@
+{
+	"variables": [],
+	"info": {
+		"name": "PepperJelly",
+		"_postman_id": "35b448d4-5a47-97c1-673a-ad6fa6b3540f",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "user_register",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/user/register",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\" : \"luisito@gmail.com\",\n    \"password\" : \"456123\",\n    \"role\" : 2,\n    \"profile\" : {\n            \"fullName\" : \"Luisito\"\n    }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "user_login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Session created or found\"] = jsonData.authToken !== undefined;\npostman.setGlobalVariable(\"pepperJellySession\", jsonData.authToken);"
+					}
+				}
+			],
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/user/login",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\" : \"juan@dogtownmedia.com\",\n    \"password\" : \"Hu5v0l5t5*\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "user_passwordForgot",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/user/forgot?userName=luisito@gmail.com",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "user_changePassword",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/user/password",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"password\" : \"456123\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "user_report",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/user/report",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"reportedUser\" : \"571523be247252e351abcd1c\",\n    \"motive\" : \"I don't like this guy\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "user_modify",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/profile",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"profile\" : {\n        \"pictures\" : [\"www.imagelocation1.com\", \"www.imagelocation2.com\"]\n    }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "user_get",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Success request\"] = jsonData.success === true;\ntests[\"Existing user object\"] = jsonData.user !== undefined;\ntests[\"Existing user _id\"] = jsonData.user._id !== undefined;"
+					}
+				}
+			],
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/user/get",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userReports\" : true\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "user_search",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/user/search",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"search\" : \"luis\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "user_block",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/user/block",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"blockedUser\" : \"570ec4d5cad288281a58ee59\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "user_unblock",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/user/unblock",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"blockedUser\" : \"570ec4d5cad288281a58ee59\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "user_getBlocked",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/user/getBlocked",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "user_follow",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/user/follow",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"followedUser\" : \"5751bc0a64a24f4d34937ea1\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "user_unfollow",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/user/unfollow",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"followedUser\" : \"571832e534503de02d3f3bd8\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "user_getFollowers",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/user/getFollowers",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "user_getFollowing",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/user/getFollowing",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "user_userNewsFeed",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/user/feed",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "restaurant_create",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/restaurant",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"image\" : \"www.imagelocation1.com\",\n    \"name\" : \"La Pura Sabrosura\",\n    \"phone\" : \"5555-5555\",\n    \"openingTimes\" : \"10-20\",\n    \"rating\" : \"3\",\n    \"category\" : \"Mexican Food\",\n    \"longitude\" : \"-99.256373\",\n    \"latitude\" : \"19.577422\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "restaurant_update",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/restaurant/56e1d6138acb1b3c1a19015b",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\" : \"La Pura Sabrosura2\",\n    \"image\" : \"www.imagelocation.com\",\n    \"phone\" : \"5555-6666\",\n    \"openingTimes\" : \"10-20\",\n    \"rating\" : \"3\",\n    \"category\" : \"Mexican Food\",\n    \"longitude\" : \"-99.256373\",\n    \"latitude\" : \"19.577422\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "restaurants_search",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/restaurants",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_id\" : \"570da5ce2e440c083ee3c00d\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "dishes_feed",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/feed",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"latitude\" : 19.436560999999998,\n    \"longitude\" : -99.2104813,\n    \"range\" : 1000000,\n    \"onlyFollowed\" : false\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "dish_create",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/dish",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"image\" : [\n        {\n            \"height\" : 600,\n            \"url\" : \"http://enteratedf.com/sites/default/files/fotos/%5Bnode%5D/establecimeintos/13_5.jpg\",\n            \"width\" : 900\n        }\n    ],\n    \"placeId\" : \"ChIJ_UC7d8P_0YURKNyeN7S84x4\",\n    \"comment\" : \"Yummi Falafel\",\n    \"categories\" : [\"Falafel\", \"Vegan\"]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "dish_like",
+			"request": {
+				"url": {
+					"raw": "{{PepperJelly}}/api/v1/dish/:dishId/like",
+					"auth": {},
+					"host": [
+						"{{PepperJelly}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"dish",
+						":dishId",
+						"like"
+					],
+					"variable": [
+						{
+							"value": "5734e94149be22d020f08903",
+							"id": "dishId"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"like\" : true\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "dish_getLiked",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/liked",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "dish_comment",
+			"request": {
+				"url": {
+					"raw": "{{PepperJelly}}/api/v1/dish/:dishId/comment",
+					"auth": {},
+					"host": [
+						"{{PepperJelly}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"dish",
+						":dishId",
+						"comment"
+					],
+					"variable": [
+						{
+							"value": "57104fa8b380950c1d6ec4ad",
+							"id": "dishId"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"comment\" : \"excellent taste!\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "dish_get",
+			"request": {
+				"url": {
+					"raw": "{{PepperJelly}}/api/v1/dish/:dishId",
+					"auth": {},
+					"host": [
+						"{{PepperJelly}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"dish",
+						":dishId"
+					],
+					"variable": [
+						{
+							"value": "5751da86adb3fc7b6cbab52f",
+							"id": "dishId"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "5751b4d864a24f4d34937ea0",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"comment\" : \"excellent taste!\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "dish_search",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/dish/search",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "dish_flag",
+			"request": {
+				"url": {
+					"raw": "{{PepperJelly}}/api/v1/dish/:dishId/flag",
+					"auth": {},
+					"host": [
+						"{{PepperJelly}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"dish",
+						":dishId",
+						"flag"
+					],
+					"variable": [
+						{
+							"value": "5710644ac748d6df03c616fd",
+							"id": "dishId"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "573a4f0f459fe18a719ac0cf",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"motive\" : \"Another test, although this is just a logo... not yummi :P\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Places search",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Is a valid search result\"] = jsonData.success === true;\ntests[\"Has results\"] = jsonData.places.length > 1;"
+					}
+				}
+			],
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/places?location=19.4356009,-99.2065204&radius=100000&name=burguer&type=restaurant|bakery|cafe|bar",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "572243641ff529843309724b",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Places get photo",
+			"request": {
+				"url": {
+					"raw": "{{PepperJelly}}/api/v1/places/photo/:photoReference",
+					"auth": {},
+					"host": [
+						"{{PepperJelly}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"places",
+						"photo",
+						":photoReference"
+					],
+					"variable": [
+						{
+							"value": "CmRdAAAAZIDg1EOyqZyqmQgC7u3bIInpHtADEdQL3l_cTLMYd7T4MGyS6ZYKVA1beJJQrb8NLCW68SqAwACi7zqjeDwohwYfIw9SC-GZaO46M2P4ZQTOPP4p_bfHSS96QNIo9V_tEhAbKVhziDz4cWhKv-Tytm93GhQjTlfsELZwKr116eCKex6JOz0ZWg",
+							"id": "photoReference"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "5704858e56ded2b826669855",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Place get detail",
+			"request": {
+				"url": {
+					"raw": "{{PepperJelly}}/api/v1/places/:placeId",
+					"auth": {},
+					"host": [
+						"{{PepperJelly}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"places",
+						":placeId"
+					],
+					"variable": [
+						{
+							"value": "ChIJd0iXOPtzhlQRGMqAcdbCpi4",
+							"id": "placeId"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "5704858e56ded2b826669855",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Place import restaurant",
+			"request": {
+				"url": {
+					"raw": "{{PepperJelly}}/api/v1/places/:placeId",
+					"auth": {},
+					"host": [
+						"{{PepperJelly}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"places",
+						":placeId"
+					],
+					"variable": [
+						{
+							"value": "ChIJd0iXOPtzhlQRGMqAcdbCpi4",
+							"id": "placeId"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "570ec48e348fe2f831b38382",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Place import photos",
+			"request": {
+				"url": {
+					"raw": "{{PepperJelly}}/api/v1/places/:placeId/:restaurantId",
+					"auth": {},
+					"host": [
+						"{{PepperJelly}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"places",
+						":placeId",
+						":restaurantId"
+					],
+					"variable": [
+						{
+							"value": "ChIJST2dbiIC0oURHShgFof2-7k",
+							"id": "placeId"
+						},
+						{
+							"value": "5704867635bf290c223794ed",
+							"id": "restaurantId"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "5704858e56ded2b826669855",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Places search from restaurant",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Is a valid search result\"] = jsonData.success === true;\ntests[\"Has results\"] = jsonData.places.length > 0;"
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "{{PepperJelly}}/api/v1/places/:restaurantId",
+					"auth": {},
+					"host": [
+						"{{PepperJelly}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"places",
+						":restaurantId"
+					],
+					"variable": [
+						{
+							"value": "5704867635bf290c223794ed",
+							"id": "restaurantId"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "571fe55b992d27e44b3ccfa0",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Location search",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/addressLookup?search=libra 27, jardines de satélite",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "5704858e56ded2b826669855",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Places autocomplete",
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/autocomplete?input=fogon",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "572243641ff529843309724b",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Admin restaurants list",
+			"request": {
+				"url": "{{PepperJelly}}/admin/restaurant?$sort=rating&$direction=-1&$limit=2&$skip=2&name=$like|pizza",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "570ec48e348fe2f831b38382",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "categories_get",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Success request\"] = jsonData.success === true;\ntests[\"Existing user object\"] = jsonData.user !== undefined;\ntests[\"Existing user _id\"] = jsonData.user._id !== undefined;"
+					}
+				}
+			],
+			"request": {
+				"url": "{{PepperJelly}}/api/v1/categories",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{pepperJellySession}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userReports\" : true\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

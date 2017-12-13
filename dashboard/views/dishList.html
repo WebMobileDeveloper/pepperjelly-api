@@ -1,0 +1,102 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title clickable" ng-click="requestAction('list', 'dish')">Dishes</h3>
+        <div class="btn-group pull-right heightFix" ng-show="listVisibility()">
+            <div class="clickable btn btn-default" ng-click="requestAction('create')"><span class="glyphicon glyphicon-plus"></span></div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="alert alert-warning" ng-if="loading" role="alert">Loading, please wait...</div>
+        <div class="alert alert-danger" ng-if="loadingError" role="alert">{{loadingError}}</div>
+        <div ui-view></div>
+        <form ng-hide="loading || loadingError || !listVisibility()" ng-submit="loadList(true)">
+            <nav>
+                <div>Showing from <b>{{pagination.from}}</b> to <b>{{pagination.to}}</b> of <b>{{pagination.total}}</b>.</div>
+                <ul class="pagination">
+                    <li ng-class="{disabled : pagination.currentPage === 1}"><a ng-click="gotoPage(1)" aria-label="First"><span aria-hidden="true">|&laquo;</span></a></li>
+                    <li ng-class="{disabled : pagination.currentPage === 1}"><a ng-click="gotoPage(pagination.currentPage - 1)" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                    <li ng-repeat="page in pagination.pages" ng-class="{'active' : page === pagination.currentPage}"><a ng-click="gotoPage(page)">{{page}} <span class="sr-only" ng-if="page == pagination.currentPage">(current)</span></a></li>
+                    <li ng-class="{disabled : pagination.currentPage == pagination.totalPages}"><a ng-click="gotoPage(pagination.currentPage + 1)" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                    <li ng-class="{disabled : pagination.currentPage == pagination.totalPages}"><a ng-click="gotoPage(pagination.totalPages)" aria-label="Last"><span aria-hidden="true">&raquo;|</span></a></li>
+                </ul>
+            </nav>
+            <table class="table table-condensed table-striped table-responsive table-hover">
+                <tr>
+                    <th><input type="checkbox" class="checkbox-big" ng-click="toggleAllSelected()" ng-model="allSelected"/></th>
+                    <th></th>
+                    <th>Image</th>
+                    <th class="clickable" ng-click="order('categories')">Categories <span class="sortorder" ng-show="predicate === 'categories'" ng-class="{reverse:reverse}"></span></th>
+                    <th class="clickable" ng-click="order('status')">Status <span class="sortorder" ng-show="predicate === 'status'" ng-class="{reverse:reverse}"></span></th>
+                    <th class="clickable" ng-click="order('rating')">Rating <span class="sortorder" ng-show="predicate === 'rating'" ng-class="{reverse:reverse}"></span></th>
+                    <th class="clickable" ng-click="order('restaurantId')">Restaurant <span class="sortorder" ng-show="predicate === 'restaurantId'" ng-class="{reverse:reverse}"></span></th>
+                    <th class="clickable" ng-click="order('userId')">User Id <span class="sortorder" ng-show="predicate === 'userId'" ng-class="{reverse:reverse}"></span></th>
+                    <th class="clickable" ng-click="order('createdAt')">Creation timestamp <span class="sortorder" ng-show="predicate === 'createdAt'" ng-class="{reverse:reverse}"></span></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td>
+                        <div ng-if="activeMultiActions">
+                            <div class="status clickable text-success" ng-click="requestAction('acceptSelected')"><span class="glyphicon glyphicon-ok-circle"></span></div>
+                            <div class="status clickable text-danger" ng-click="requestAction('rejectSelected')"><span class="glyphicon glyphicon-remove-circle"></span></div>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td ng-class="{'has-success' : currentFilter.categories}">
+                        <ui-select class="form-control"
+                                   theme="bootstrap"
+                                   ng-model="filters.categories"
+                                   multiple>
+                            <ui-select-match placeholder="Filter categories...">{{$item}}</ui-select-match>
+                            <ui-select-choices repeat="category in categories | filter: $select.search">
+                                <div ng-bind-html="category | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </td>
+                    <td ng-class="{'has-success' : currentFilter.status}">
+                        <select class="form-control" ng-model="filters.status">
+                            <option value="">Select a filter...</option>
+                            <option value="unfiltered">unfiltered</option>
+                            <option value="accepted">accepted</option>
+                            <option value="rejected">rejected</option>
+                        </select>
+                    </td>
+                    <td ng-class="{'has-success' : currentFilter.rating}"><input class="form-control" type="text" placeholder="no filter" ng-model="filters.rating" /></td>
+                    <td ng-class="{'has-success' : currentFilter.restaurantId}"><input class="form-control" type="text" placeholder="no filter" ng-model="filters.restaurantId" /></td>
+                    <td ng-class="{'has-success' : currentFilter.userId}"><input class="form-control" type="text" placeholder="no filter" ng-model="filters.userId" /></td>
+                    <td></td>
+                    <td colspan="2"><button type="submit" class="btn btn-default btn-sm">Filter</button></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr ng-repeat="dish in dishes" ng-class="(dish.status == 'accepted') ? 'success' : (dish.status == 'rejected') ? 'danger' : ''">
+                    <td><input type="checkbox" class="checkbox-big" ng-click="checkSelected()" ng-model="dish.selected"/></td>
+                    <td><div class="clickable" ng-click="requestAction('detail', dish._id)"><span class="glyphicon glyphicon-eye-open"></span></div></td>
+                    <td><img class="clickable listImg" ng-src="{{dish.image[0].url}}" ng-click="requestAction('detail', dish._id)" /></td>
+                    <td>{{checkContent(dish.categories)}}</td>
+                    <td>{{checkContent(dish.status)}}</td>
+                    <td>{{checkContent(dish.rating)}}</td>
+                    <td><a class="clickable" ng-click="requestAction('detail', dish.restaurantId, 'restaurant')">{{checkContent(dish.restaurantId)}}</a></td>
+                    <td><a class="clickable" ng-click="requestAction('detail', dish.userId, 'user')">{{checkContent(dish.userId)}}</a></td>
+                    <td>{{checkContent(dish.createdAt)}}</td>
+                    <td><div class="status clickable text-success" ng-click="requestAction('accept', dish._id)"><span class="glyphicon glyphicon-ok-circle"></span></div></td>
+                    <td><div class="status clickable text-danger" ng-click="requestAction('reject', dish._id)"><span class="glyphicon glyphicon-remove-circle"></span></div></td>
+                    <td><div class="clickable" ng-click="requestAction('edit', dish._id)"><span class="glyphicon glyphicon-pencil"></span></div></td>
+                    <td><div class="clickable" ng-click="requestAction('delete', dish._id)"><span class="glyphicon glyphicon-remove"></span></div></td>
+                </tr>
+            </table>
+            <nav>
+                <ul class="pagination">
+                    <li ng-class="{disabled : pagination.currentPage === 1}"><a ng-click="gotoPage(1)" aria-label="First"><span aria-hidden="true">|&laquo;</span></a></li>
+                    <li ng-class="{disabled : pagination.currentPage === 1}"><a ng-click="gotoPage(pagination.currentPage - 1)" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                    <li ng-repeat="page in pagination.pages" ng-class="{'active' : page === pagination.currentPage}"><a ng-click="gotoPage(page)">{{page}} <span class="sr-only" ng-if="page == pagination.currentPage">(current)</span></a></li>
+                    <li ng-class="{disabled : pagination.currentPage == pagination.totalPages}"><a ng-click="gotoPage(pagination.currentPage + 1)" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                    <li ng-class="{disabled : pagination.currentPage == pagination.totalPages}"><a ng-click="gotoPage(pagination.totalPages)" aria-label="Last"><span aria-hidden="true">&raquo;|</span></a></li>
+                </ul>
+            </nav>
+        </form>
+    </div>
+</div>

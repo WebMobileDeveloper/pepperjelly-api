@@ -1,0 +1,35 @@
+{
+  "name": "PepperJelly-DTM-Dashboard",
+  "version": "1.0.0",
+  "homepage": "",
+  "authors": [
+    ""
+  ],
+  "moduleType": [
+    "node"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.4.x",
+    "angular-sanitize": "*",
+    "angular-resource": "1.4.x",
+    "angular-cookies": "1.4.x",
+    "angular-ui-select": "*",
+    "angular-ui-router": "*",
+    "angular-google-maps": "2.3.x",
+    "bootstrap": "3.3.x",
+    "angular-bootstrap": "0.13.x"
+  },
+  "resolutions" : {
+    "angular" : "1.4.10"
+  },
+  "devDependencies": {
+  }
+}

@@ -1,0 +1,30 @@
+<div ng-show="show">
+    <form class="form-horizontal col-md-6 col-md-offset-3" role="form">
+        <div class="form-group">
+            <label for="userName" class="col-sm-2 control-label">User name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="userName"
+                       ng-model="loginModel.userName"
+                       ng-disabled="loading"
+                       required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="userPassword" class="col-sm-2 control-label">Password</label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" id="userPassword"
+                       ng-model="loginModel.password"
+                       ng-disabled="loading"
+                       required />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default"
+                        ng-click="loginProxy()"
+                        ng-disabled="loading">LogIn</button>
+            </div>
+        </div>
+        <div class="alert alert-danger" ng-show="sessionError">Login error: {{sessionError}}</div>
+    </form>
+</div>

@@ -1,0 +1,53 @@
+<div>
+    <style>
+        .angular-google-map-container {
+            height: 600px;
+        }
+        .searchBox{
+            font-size: 18px;
+            top: 7px !important;
+            border-radius: 4px;
+            padding: 5px;
+        }
+    </style>
+    <ui-gmap-google-map class="col-sm-8" bounds="map.bounds" center="map.center" zoom="map.zoom" options="map.options" events="map.events" control="map.control">
+        <script type="text/ng-template" id="searchbox.tpl.html">
+            <input type="text" class="searchBox" placeholder="Search a restaurant...">
+        </script>
+        <ui-gmap-search-box
+                template="search.template"
+                events="search.events"
+                options="search.options"
+                position="'top-left'">
+        </ui-gmap-search-box>
+        <ui-gmap-window show="window.show" coords="window.model" options="window.options" closeClick="window.closeClick()">
+            <div ng-controller="restaurantImportMethod">
+                <h4>{{window.model.name}}</h4>
+                <p>{{window.model.address}}</p>
+                <button type="button" class="btn btn-info" ng-show="!$parent.coords.imported" ng-click="$parent.coords.imported = true; importProperty($parent.coords.id)">Import restaurant...</button>
+                <div class="alert alert-danger" ng-show="importError">Import error :-(<pre>{{importError}}</pre></div>
+                <div class="alert alert-info" ng-show="importInfo">Restaurant imported!</div>
+                <div class="alert alert-warning" ng-show="importing">Importing restaurant, please wait...</div>
+            </div>
+        </ui-gmap-window>
+        <ui-gmap-markers
+                events="markers.events"
+                models="placesFound"
+                coords="'self'">
+        </ui-gmap-markers>
+    </ui-gmap-google-map>
+    <div class="col-sm-4">
+        <h4 ng-show="placesFound.length > 0">Places found</h4>
+        <div class="alert alert-danger" ng-show="importError">Import error :-(<pre>{{importError}}</pre></div>
+        <div class="alert alert-info" ng-show="importInfo">Restaurant imported!</div>
+        <div class="alert alert-warning" ng-show="importing">Importing restaurant, please wait...</div>
+        <div ng-show="placesFound.length > 0">
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="place in placesFound" ng-class="{'list-group-item-success' : place.imported}">
+                    <b title="{{place.address}}">{{place.name}}</b>
+                    <button class="btn btn-info btn-xs pull-right" ng-show="!place.imported" ng-disabled="importing" ng-click="place.imported = true; importProperty(place.id);">Import...</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

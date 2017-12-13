@@ -1,0 +1,146 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{displayAction(currentAction)}}</h3>
+        <div class="btn-group pull-right heightFix" ng-show="currentAction=='detail'">
+            <div class="clickable btn btn-default" ng-click="requestAction('edit', dish._id)"><span class="glyphicon glyphicon-pencil"></span></div>
+            <div class="clickable btn btn-default" ng-click="requestAction('delete', dish._id)"><span class="glyphicon glyphicon-remove"></span></div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="alert alert-warning" ng-if="loading" role="alert">Loading, please wait...</div>
+        <div class="alert alert-danger" ng-if="loadingError" role="alert">{{loadingError}}</div>
+        <form class="col-sm-12" ng-hide="loading || loadingError" ng-submit="save()">
+            <div class="form-group col-sm-12">
+                <h4>Basic information</h4>
+                <hr />
+                <div class="singleField col-sm-12">
+                    <label>Dish image <button ng-show="currentAction!='detail'" class="btn btn-info btn-xs pull-right" type="button" ng-click="addImage()"><span class="glyphicon glyphicon-plus"></span></button></label>
+                    <div class="singleImage" ng-repeat="(index, image) in dish.image">
+                        <input type="text" ng-show="currentAction!='detail'" ng-model="image.url" class="form-control" ng-change="getImageSizes(index)" required />
+                        <span ng-show="currentAction!='detail'">
+                            Height: <input type="number" ng-model="image.height" class="form-control input-sm forceInline" required />,
+                            Width: <input type="number" ng-model="image.width" class="form-control input-sm forceInline" required />
+                        </span>
+                        <button ng-show="currentAction!='detail'" type="button" ng-click="removeImage(index)"><span class="glyphicon glyphicon-remove"></span></button><br/>
+                        <span ng-show="currentAction=='detail'">Height: {{image.height}}, Width: {{image.width}}</span><br/>
+                        <img ng-show="currentAction!='create'" ng-src="{{image.url}}" class="picture"/>
+                    </div>
+                </div>
+                <div class="singleField col-sm-4">
+                    <label for="status">Status</label>
+                    <div ng-show="currentAction=='detail'" ng-attr-title="{{checkContent(dish.status)}}">{{dish.status}}</div>
+                    <select ng-show="currentAction!='detail'" id="status" class="form-control" ng-model="dish.status" required>
+                        <option value="unfiltered">unfiltered</option>
+                        <option value="accepted">accepted</option>
+                        <option value="rejected">rejected</option>
+                    </select>
+                </div>
+                <div class="singleField col-sm-4">
+                    <label for="restaurantId">Restaurant Id</label>
+                    <a class="clickable" ng-show="currentAction!='create'" ng-attr-title="{{checkContent(dish.restaurantId)}}" ng-click="requestAction('detail', dish.restaurantId, 'restaurant')">{{dish.restaurantId}}</a>
+                    <input type="text" ng-show="currentAction=='create'" ng-model="dish.restaurantId" id="restaurantId" class="form-control" required />
+                </div>
+                <div class="singleField col-sm-4">
+                    <label for="categories">Categories</label>
+                    <div ng-show="currentAction=='detail'">{{checkContent(dish.categories)}}</div>
+                    <ui-select id="categories"
+                               ng-show="currentAction!='detail'"
+                               class="form-control"
+                               theme="bootstrap"
+                               ng-model="dish.categories"
+                               required multiple>
+                        <ui-select-match placeholder="Select categories...">{{$item}}</ui-select-match>
+                        <ui-select-choices repeat="category in categories | filter: $select.search">
+                            <div ng-bind-html="category | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="singleField col-sm-4" ng-show="currentAction!='create'">
+                    <label>Time stamp</label>
+                    <div>{{checkContent(dish.createdAt)}}</div>
+                </div>
+                <div class="singleField col-sm-4" ng-show="currentAction!='create'">
+                    <label>Flag</label>
+                    <div ng-show="currentAction=='detail'">{{displayFlag(dish.banned)}}</div>
+                    <input ng-show="currentAction!='detail'" id="flag" type="checkbox" ng-model="dish.flag" />
+                </div>
+                <div class="singleField col-sm-4" ng-show="currentAction!='create'">
+                    <label>Dish likes</label>
+                    <div>{{dish.likes || 0}}</div>
+                </div>
+                <div class="singleField col-sm-4" ng-show="currentAction!='create'">
+                    <label>Dish rating</label>
+                    <div>{{dish.rating || "-"}}</div>
+                </div>
+                <div class="singleField col-sm-4" ng-show="currentAction!='create'">
+                    <label>Creator</label>
+                    <a class="clickable" ng-attr-title="{{checkContent(dish.userId)}}" ng-click="requestAction('detail', dish.userId, 'user')">{{dish.userId}}</a>
+                </div>
+            </div>
+            <div class="form-group col-sm-12" ng-show="dish.comments && dish.comments.length > 0 && currentAction!='create'">
+                <h4>Comments</h4>
+                <hr />
+                <table class="table table-condensed table-responsive table-striped">
+                    <tr>
+                        <th>Comment</th>
+                        <th>Time stamp</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="comment in dish.comments">
+                        <td class="singleField col-sm-8">
+                            {{checkContent(comment.comment)}}
+                        </td>
+                        <td class="singleField col-sm-2">
+                            {{checkContent(comment.createdAt)}}
+                        </td>
+                        <td class="singleField col-sm-1">
+                            <a class="clickable" ng-attr-title="{{comment.userId}}" ng-click="requestAction('detail', comment.userId, 'user')">{{comment.userId}}</a>
+                        </td>
+                        <td class="singleField col-sm-1">
+                            <span class="glyphicon glyphicon-remove clickable" ng-click="requestAction('delete', comment._id, 'comment')" ></span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="form-group col-sm-12" ng-show="dish.reports && dish.reports.length > 0 && currentAction!='create'">
+                <h4>Reports</h4>
+                <hr />
+                <table class="table table-condensed table-responsive table-striped">
+                    <tr>
+                        <th>Motive</th>
+                        <th>Report timestamp</th>
+                        <th>Reporter</th>
+                        <th>Solution timestamp</th>
+                        <th>Solved by</th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="report in dish.reports" ng-class="{'mute' : report.solved, 'danger' : !report.solved}">
+                        <td class="singleField col-sm-4">
+                            {{checkContent(report.motive)}}
+                        </td>
+                        <td class="singleField col-sm-2">
+                            {{checkContent(report.createdAt)}}
+                        </td>
+                        <td class="singleField col-sm-2">
+                            <a class="clickable" ng-attr-title="{{report.reportingUser}}" ng-click="requestAction('detail', report.reportingUser, 'user')">{{report.reportingUser}}</a>
+                        </td>
+                        <td class="singleField col-sm-2">
+                            {{checkContent(report.solvingDate)}}
+                        </td>
+                        <td class="singleField col-sm-2">
+                            <a class="clickable" ng-attr-title="{{report.solvingUser}}" ng-click="requestAction('detail', report.solvingUser, 'user')">{{report.solvingUser}}</a>
+                        </td>
+                        <td>
+                            <a class="glyphicon glyphicon-check clickable" ng-click="requestAction('solveIssue', report._id, 'solveDishReport')"></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="form-group col-sm-12" ng-show="currentAction!='detail'">
+                <button class="btn btn-primary pull-right" type="submit">Save</button>
+                <button class="btn btn-default pull-right" type="button" ng-click="cancelSave()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

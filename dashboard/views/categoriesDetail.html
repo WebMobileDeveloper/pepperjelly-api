@@ -1,0 +1,48 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{displayAction(currentAction)}}</h3>
+        <div class="btn-group pull-right heightFix" ng-show="currentAction=='detail'">
+            <div class="clickable btn btn-default" ng-click="requestAction('edit', categories._id)"><span class="glyphicon glyphicon-pencil"></span></div>
+            <div class="clickable btn btn-default" ng-click="requestAction('delete', categories._id)"><span class="glyphicon glyphicon-remove"></span></div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="alert alert-warning" ng-if="loading || softLoading" role="alert">Loading, please wait...</div>
+        <div class="alert alert-danger" ng-if="loadingError || softError" role="alert">{{loadingError || softError}}</div>
+        <form class="col-sm-12" ng-hide="loading || loadingError" ng-submit="save()">
+            <div class="form-group col-sm-12">
+                <h4>Basic information</h4>
+                <hr />
+                <div class="singleField col-sm-3">
+                    <label for="name">Parent</label>
+                    <div ng-show="currentAction=='detail'">{{checkContent(categories.parent)}}</div>
+                    <select ng-show="currentAction!='detail'" ng-options="parentCat for parentCat in parentCategories" id="parent" class="form-control" ng-model="categories.parent" ng-disabled="disableParenting" aria-describedby="helpBlock">
+                        <option value="">Root category</option>
+                    </select>
+                    <span id="helpBlock" ng-show="disableParenting" class="help-block">This category has children already, cannot have a parent.</span>
+                </div>
+                <div class="singleField col-sm-3">
+                    <label for="name">Name</label>
+                    <div ng-show="currentAction=='detail'">{{checkContent(categories.name)}}</div>
+                    <input ng-show="currentAction!='detail'" id="name" type="text" class="form-control" ng-model="categories.name" required />
+                </div>
+                <div class="singleField col-sm-3">
+                    <label for="status">Status</label>
+                    <div ng-show="currentAction=='detail'">{{checkContent(categories.status)}}</div>
+                    <select ng-show="currentAction!='detail'" id="status" class="form-control" ng-model="categories.status" required>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="singleField col-sm-3" ng-show="currentAction=='detail'">
+                    <label>Timestamp</label>
+                    <div>{{checkContent(categories.createdAt.toString())}}</div>
+                </div>
+            </div>
+            <div class="form-group col-sm-12" ng-show="currentAction!='detail'">
+                <button class="btn btn-primary pull-right" type="submit">Save</button>
+                <button class="btn btn-default pull-right" type="button" ng-click="cancelSave()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,115 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{displayAction(currentAction)}}</h3>
+        <div class="btn-group pull-right heightFix" ng-show="currentAction=='detail'">
+            <div class="clickable btn btn-default" ng-click="requestAction('list', null, 'dish', {restaurantId : restaurant._id})"><span class="glyphicon glyphicon-picture"></span></div>
+            <div class="clickable btn btn-default" ng-click="requestAction('edit', restaurant._id)"><span class="glyphicon glyphicon-pencil"></span></div>
+            <div class="clickable btn btn-info" ng-click="requestAction('import', restaurant._id)"><span class="glyphicon glyphicon-cloud-download"></span></div>
+            <div class="clickable btn btn-default" ng-click="requestAction('delete', restaurant._id)"><span class="glyphicon glyphicon-remove"></span></div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="alert alert-info" ng-if="loadInfo" role="alert">
+            <pre ng-if="loadInfoType == 'result'">{{loadInfo}}</pre>
+            <div ng-if="loadInfoType == 'select'" class="btn-group">
+                <button type="button" class="btn btn-default col-sm-12"
+                        ng-repeat="place in selectResults"
+                        ng-click="requestAction('directImport', restaurant._id, null, {placeId : place.place_id})"><b>{{place.name}}</b>: {{place.vicinity}}</button>
+            </div>
+        </div>
+        <div class="alert alert-warning" ng-if="loading || softLoading" role="alert">Loading, please wait...</div>
+        <div class="alert alert-danger" ng-if="loadingError || softError" role="alert">{{loadingError || softError}}</div>
+        <form class="col-sm-12" ng-hide="loading || loadingError" ng-submit="save()">
+            <div class="form-group col-sm-12">
+                <h4>Basic information</h4>
+                <hr />
+                <div class="singleField col-sm-12">
+                    <label for="image">Image</label>
+                    <div ng-show="currentAction=='detail'">
+                        <a ng-show="restaurant.image" target="_blank" href="{{restaurant.image}}"><img ng-src="{{restaurant.image}}" class="picture"/></a>
+                        <span ng-show="!restaurant.image">No image found </span>
+                        <div class="clickable btn btn-default" ng-click="requestAction('list', null, 'dish', {restaurantId : restaurant._id})"><span class="glyphicon glyphicon-picture"></span> See dishes...</div>
+                    </div>
+                    <input ng-show="currentAction!='detail'" id="image" type="text" class="form-control" ng-model="restaurant.image" />
+                </div>
+                <div class="singleField col-sm-4">
+                    <label for="name">Name</label>
+                    <div ng-show="currentAction=='detail'">{{checkContent(restaurant.name)}}</div>
+                    <input ng-show="currentAction!='detail'" id="name" type="text" class="form-control" ng-model="restaurant.name" required />
+                </div>
+                <div class="singleField col-sm-4">
+                    <label for="phone">Phone</label>
+                    <div ng-show="currentAction=='detail'">{{checkContent(restaurant.phone)}}</div>
+                    <input ng-show="currentAction!='detail'" id="phone" type="text" class="form-control" ng-model="restaurant.phone" />
+                </div>
+                <div class="singleField col-sm-4">
+                    <label for="menu">Menu</label>
+                    <div ng-show="currentAction=='detail'"><a target="_blank" ng-href="{{restaurant.menu}}">{{checkContent(restaurant.menu)}}</a></div>
+                    <input ng-show="currentAction!='detail'" id="menu" type="text" class="form-control" ng-model="restaurant.menu" />
+                </div>
+                <div class="singleField col-sm-12">
+                    <label for="openingTimes">Opening hours</label>
+                    <div ng-show="currentAction=='detail'">{{checkContent(restaurant.openingTimes)}}</div>
+                    <input ng-show="currentAction!='detail'" id="openingTimes" type="text" class="form-control" ng-model="restaurant.openingTimes" />
+                </div>
+                <div class="singleField col-sm-4" ng-show="currentAction=='detail'">
+                    <label>Location</label>
+                    <div>{{checkContent(restaurant.location)}}</div>
+                </div>
+                <div class="singleField col-sm-2" ng-show="currentAction!='detail'">
+                    <label for="longitude">Location longitude</label>
+                    <input id="longitude" type="number" step="any" class="form-control" ng-model="restaurant.location[0]"/>
+                </div>
+                <div class="singleField col-sm-2" ng-show="currentAction!='detail'">
+                    <label for="latitude">Location latitude</label>
+                    <input id="latitude" type="number" step="any" class="form-control" ng-model="restaurant.location[1]"/>
+                </div>
+                <div class="singleField col-sm-4">
+                    <label for="rating">Rating</label>
+                    <div ng-show="currentAction=='detail'">{{checkContent(restaurant.rating)}}</div>
+                    <input ng-show="currentAction!='detail'" id="rating" type="text" class="form-control" ng-model="restaurant.rating" required />
+                </div>
+                <div class="singleField col-sm-4">
+                    <label>Average dish rating</label>
+                    <div>{{checkContent(restaurant.averageRating)}}</div>
+                </div>
+                <div class="singleField col-sm-4">
+                    <label for="category">Categories</label>
+                    <div ng-show="currentAction=='detail'">{{checkContent(restaurant.category)}}</div>
+                    <ui-select id="category"
+                               ng-show="currentAction!='detail'"
+                               class="form-control"
+                               theme="bootstrap"
+                               ng-model="restaurant.category"
+                               required multiple>
+                        <ui-select-match placeholder="Select categories...">{{$item}}</ui-select-match>
+                        <ui-select-choices repeat="category in categories | filter: $select.search">
+                            <div ng-bind-html="category | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="singleField col-sm-4">
+                    <label for="address">Address</label>
+                    <div ng-show="currentAction=='detail'">{{checkContent(restaurant.address)}}</div>
+                    <input ng-show="currentAction!='detail'" id="address" type="text" class="form-control" ng-model="restaurant.address" required />
+                </div>
+                <div class="singleField col-sm-4" ng-show="currentAction=='detail'">
+                    <label>Creator</label>
+                    <a class="clickable" ng-attr-title="{{checkContent(restaurant.userId)}}" ng-click="requestAction('detail', restaurant.userId, 'user')">{{restaurant.userId}}</a>
+                </div>
+                <div class="singleField col-sm-4">
+                    <label>Google places Id</label>
+                    <div>{{checkContent(restaurant.placesId)}}</div>
+                </div>
+                <div class="singleField col-sm-4" ng-show="currentAction=='detail'">
+                    <label>Timestamp</label>
+                    <div>{{checkContent(restaurant.createdAt.toString())}}</div>
+                </div>
+            </div>
+            <div class="form-group col-sm-12" ng-show="currentAction!='detail'">
+                <button class="btn btn-primary pull-right" type="submit">Save</button>
+                <button class="btn btn-default pull-right" type="button" ng-click="cancelSave()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
